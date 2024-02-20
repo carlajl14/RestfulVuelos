@@ -9,6 +9,27 @@ class PasajeModel extends Basedatos {
         $this->table = "pasaje";
         $this->conexion = $this->getConexion();
     }
+    
+    /**
+     *  Obtener los pasajes
+     * 
+     * @return string
+     */
+    public function getPasajes() {
+        try {
+            $sql = 'SELECT p.idpasaje, pa.nombre, p.identificador, p.numasiento, p.clase, p.pvp FROM pasaje p join pasajero pa on (p.pasajerocod = pa.pasajerocod) GROUP BY p.idpasaje';
+            $sentencia = $this->conexion->prepare($sql);
+            $sentencia->execute();
+            $pasajes = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            
+            if ($pasajes) {
+                return $pasajes;
+            }
+            return 'Error al devolver los pasajes';
+        } catch (PDOException $e) {
+            return 'Error al devolver los pasajes.<br>' . $e->getMessage();
+        }
+    }
 
     /**
      * Obtener los pasajes de un vuelo
@@ -18,7 +39,7 @@ class PasajeModel extends Basedatos {
      */
     public function getPasaje($id) {
         try {
-            $sql = 'select p.idpasaje, p.pasajerocod, pa.nombre, pa.pais, p.numasiento, p.clase, p.pvp from pasaje p join pasajero pa on(p.pasajerocod = pa.pasajerocod) where p.identificador = ?';
+            $sql = 'select p.idpasaje, p.pasajerocod, v.identificador, pa.nombre, pa.pais, p.numasiento, p.clase, p.pvp from pasaje p join pasajero pa on(p.pasajerocod = pa.pasajerocod) join vuelo v on (p.identificador = v.identificador) where p.identificador = ?';
             $sentencia = $this->conexion->prepare($sql);
             $sentencia->bindParam(1, $id);
             $sentencia->execute();
@@ -131,8 +152,11 @@ class PasajeModel extends Basedatos {
                 return "Registro insertado: " . $post['pasajerocod'];
             }
             
+            $mensaje = "";
+            
             if ($vuelopasajero == true || $asiento == true) {
-                return "Asiento o pasaje erroneo.";
+                $mensaje = "Asiento o pasaje erroneo.";
+                return $mensaje;
             }
         } catch (PDOException $e) {
             return "ERROR AL INSERTAR.<br>" . $e->getMessage();
@@ -147,7 +171,6 @@ class PasajeModel extends Basedatos {
      */
     public function updatePasaje($post) {
         try {
-            //$vuelopasajero = $this->comprobarPasajeroVuelo($post['pasajerocod'], $post['identificador']);
             $asiento = $this->comprobarAsiento($post['numasiento'], $post['identificador']);
             
             if ($asiento == false) {

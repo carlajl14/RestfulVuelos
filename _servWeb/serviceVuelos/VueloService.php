@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         $res = $vuelo->allVuelos();
         echo json_encode($res);
-        echo json_encode($ide);
         exit();
     }
 }

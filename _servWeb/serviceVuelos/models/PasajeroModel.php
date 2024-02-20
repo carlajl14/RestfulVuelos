@@ -23,7 +23,7 @@ class PasajeroModel extends Basedatos {
             $pasajeros = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             return $pasajeros;
         } catch (PDOException $e) {
-            return 'Error al devolver los vuelos.<br>'. $e->getMessage();
+            return 'Error al devolver los pasajeros.<br>'. $e->getMessage();
         }
     }
 }

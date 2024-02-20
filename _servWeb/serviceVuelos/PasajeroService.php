@@ -9,7 +9,7 @@ $pasajero = new PasajeroModel();
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {
         //$res = $vuelo->getOneVuelo($_GET['id']);
-        echo json_encode($res);
+        //echo json_encode($res);
         exit();
     } else {
         $res = $pasajero->allPasajeros();

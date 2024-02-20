@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode($res);
         exit();
     } else {
-        //$res = $pasaje->getIdentificador();
+        $res = $pasaje->getPasajes();
         echo json_encode($res);
         exit();
     }
